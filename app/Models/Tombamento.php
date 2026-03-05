@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tombamento extends Model
@@ -63,6 +64,11 @@ class Tombamento extends Model
     public function transferencias(): HasMany
     {
         return $this->hasMany(TransferenciaPatrimonial::class);
+    }
+
+    public function baixa(): HasOne
+    {
+        return $this->hasOne(BaixaPatrimonial::class);
     }
 
     public function isPendente(): bool
