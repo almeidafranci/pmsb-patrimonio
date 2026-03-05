@@ -26,6 +26,7 @@ class RoleAndPermissionSeeder extends Seeder
             'requisicao',
             'movimentacao',
             'usuario',
+            'perfil',
         ];
 
         $actions = ['view_any', 'view', 'create', 'update', 'delete'];
@@ -74,6 +75,8 @@ class RoleAndPermissionSeeder extends Seeder
         $consulta->givePermissionTo(
             Permission::where('name', 'like', 'view_any_%')
                 ->orWhere('name', 'like', 'view_%')
+                ->andWhere('name', 'not like', '%_perfil')
+                ->andWhere('name', 'not like', '%_usuario')
                 ->get()
         );
     }
