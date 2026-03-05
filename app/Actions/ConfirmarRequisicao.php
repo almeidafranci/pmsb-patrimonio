@@ -16,7 +16,7 @@ class ConfirmarRequisicao
             throw new \RuntimeException('Esta requisição já foi confirmada.');
         }
 
-        $requisicao->load(['itens.item', 'requisicaoTombamentos.tombamento']);
+        $requisicao->load(['itens.item', 'requisicaoTombamentos.tombamento.item']);
 
         $hasItens = $requisicao->itens->isNotEmpty();
         $hasTombamentos = $requisicao->requisicaoTombamentos->isNotEmpty();
@@ -53,13 +53,38 @@ class ConfirmarRequisicao
                 ]);
             }
 
-            foreach ($requisicao->requisicaoTombamentos as $requisicaoTombamento) {
-                $tombamento = $requisicaoTombamento->tombamento;
+            $tombamentosByItem = $requisicao->requisicaoTombamentos->groupBy('tombamento.item_id');
 
-                $tombamento->update([
-                    'secretaria_id' => $requisicao->secretaria_id,
-                    'departamento_id' => $requisicao->departamento_id,
+            foreach ($tombamentosByItem as $itemId => $group) {
+                $item = $group->first()->tombamento->item;
+                $quantidade = $group->count();
+                $saldoAnterior = $item->estoque_atual;
+                $novoSaldo = $saldoAnterior - $quantidade;
+
+                if ($novoSaldo < 0) {
+                    throw new \RuntimeException("Estoque insuficiente para o item: {$item->nome}. Disponível: {$saldoAnterior}, Solicitado: {$quantidade}");
+                }
+
+                $item->update(['estoque_atual' => $novoSaldo]);
+
+                Movimentacao::create([
+                    'item_id' => $item->id,
+                    'tipo' => MovimentacaoTipo::Saida,
+                    'quantidade' => $quantidade,
+                    'saldo_anterior' => $saldoAnterior,
+                    'saldo_atual' => $novoSaldo,
+                    'referencia_tipo' => 'requisicao',
+                    'referencia_id' => $requisicao->id,
+                    'data' => $requisicao->data_requisicao,
+                    'usuario_id' => auth()->id(),
                 ]);
+
+                foreach ($group as $requisicaoTombamento) {
+                    $requisicaoTombamento->tombamento->update([
+                        'secretaria_id' => $requisicao->secretaria_id,
+                        'departamento_id' => $requisicao->departamento_id,
+                    ]);
+                }
             }
 
             $requisicao->update(['status' => RequisicaoStatus::Confirmada]);

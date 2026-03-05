@@ -26,7 +26,7 @@ class RequisicaoItensRelationManager extends RelationManager
         return $schema
             ->components([
                 Select::make('item_id')
-                    ->relationship('item', 'nome')
+                    ->relationship('item', 'nome', fn ($query) => $query->where('requer_tombamento', false))
                     ->required()
                     ->searchable()
                     ->preload(),

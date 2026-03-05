@@ -41,7 +41,9 @@ class RequisicaoTombamentosRelationManager extends RelationManager
                 AttachAction::make()
                     ->label('Vincular Tombamento')
                     ->recordSelectOptionsQuery(fn ($query) => $query
-                        ->where('status', TombamentoStatus::Ativo))
+                        ->where('status', TombamentoStatus::Ativo)
+                        ->whereNull('secretaria_id')
+                        ->whereNull('departamento_id'))
                     ->preloadRecordSelect()
                     ->visible(fn () => $this->getOwnerRecord()->isRascunho()),
             ])

@@ -6,6 +6,7 @@ use App\Enums\TombamentoStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -59,6 +60,11 @@ class Tombamento extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(User::class, 'usuario_id');
+    }
+
+    public function requisicaos(): BelongsToMany
+    {
+        return $this->belongsToMany(Requisicao::class, 'requisicao_tombamentos');
     }
 
     public function transferencias(): HasMany
