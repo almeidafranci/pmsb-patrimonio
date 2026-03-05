@@ -15,11 +15,11 @@ class CadastrosSeeder extends Seeder
     public function run(): void
     {
         $secretarias = $this->seedSecretarias();
-        $this->seedDepartamentos($secretarias);
+        // $this->seedDepartamentos($secretarias);
         $categorias = $this->seedCategorias();
         $unidades = $this->seedUnidadesMedida();
-        $this->seedFornecedores();
-        $this->seedItens($categorias, $unidades);
+        // $this->seedFornecedores();
+        // $this->seedItens($categorias, $unidades);
     }
 
     /**
@@ -28,14 +28,18 @@ class CadastrosSeeder extends Seeder
     private function seedSecretarias(): array
     {
         $data = [
-            ['nome' => 'Secretaria de Administração', 'sigla' => 'SEMAD'],
+            ['nome' => 'Secretaria de Administração e Planejamento', 'sigla' => 'SEMAD'],
             ['nome' => 'Secretaria de Educação', 'sigla' => 'SEMED'],
             ['nome' => 'Secretaria de Saúde', 'sigla' => 'SEMUS'],
-            ['nome' => 'Secretaria de Obras e Infraestrutura', 'sigla' => 'SEMOB'],
+            ['nome' => 'Secretaria de Infraestrutura', 'sigla' => 'SEINFRA'],
+            ['nome' => 'Secretaria de Mobilidade Urbana', 'sigla' => 'SEMOB'],
             ['nome' => 'Secretaria de Meio Ambiente', 'sigla' => 'SEMMA'],
             ['nome' => 'Secretaria de Assistência Social', 'sigla' => 'SEMAS'],
-            ['nome' => 'Secretaria de Cultura e Turismo', 'sigla' => 'SECULT'],
-            ['nome' => 'Secretaria de Fazenda', 'sigla' => 'SEFAZ'],
+            ['nome' => 'Secretaria da Fazenda', 'sigla' => 'SEFAZ'],
+            ['nome' => 'Secretaria de Esporte, Cultura, Lazer e Juventude', 'sigla' => 'SEMEL'],
+            ['nome' => 'Secretaria do Desenvolvimento da Agricultura, Abastecimento, Irrigação e Pesca', 'sigla' => 'SMDAAIP'],
+            ['nome' => 'Controladoria Geral do Município', 'sigla' => 'CGM'],
+            ['nome' => 'Procuradoria Geral do Município', 'sigla' => 'PGM'],
         ];
 
         $secretarias = [];
